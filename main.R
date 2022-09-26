@@ -12,7 +12,7 @@ source('r/get_silo_annual.R')
 
 # 3. other attributes####
 # note that the topography, soil, CMIP6 climate, land use map, 
-# and fuel type map need to be mannually added
+# and fuel type map need to be manually added
 source('r/get_annaul_clim_cmip.R')
 source('r/get_lcm4vic.R')
 
@@ -33,6 +33,6 @@ source('r/run_parallel_shortlist.R')
 
 # the plan then is to use the fuel type in the short list 
 # to filter out types that are unlikely to present 
-# so the final predictions has more catagories but also 
+# so the final predictions has more categories but also 
 # ecologically constrained
 
