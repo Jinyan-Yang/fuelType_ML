@@ -6,10 +6,10 @@ library(foreach)
 # model fit#############
 # read inputs
 model.input.df <- readRDS('cache/input_access.rds')
-# splite inputs by no. of cpu core
+# split inputs by no. of cpu core
 model.input.df <- model.input.df[complete.cases(model.input.df),]
 sample.d <- model.input.df#[1:1000,]
-n.split <- 4
+n.split <- 10
 data.ls <- split(sample.d, rep(1:n.split, 
                     length.out = nrow(sample.d), 
                     each = ceiling(nrow(sample.d)/n.split)))
@@ -18,7 +18,7 @@ rm(model.input.df)
 # rm(sample.d)
 #  rf model####
 # model.rf <- readRDS('cache/rf.fit.fuelType.new.rds')
-model.rf <- readRDS('cache/rf.fit.fuelType.new.short.rds')
+model.rf <- readRDS('cache/rf.fit.fuelType.new.rds')
 
 
 # set up parallel computing#
@@ -52,8 +52,8 @@ coordinates(spg) <- ~ x + y
 gridded(spg) <- TRUE
 out.ra <- raster(spg)
 # plot(out.ra)
-
-saveRDS(out.ra,'out.access.short.rds')
+unique(out.ra)
+saveRDS(out.ra,'cache/out.access.long.rds')
 
 # make plots#########
 tmp.ft.df <- readRDS('ft.train.evaluation.rds')
