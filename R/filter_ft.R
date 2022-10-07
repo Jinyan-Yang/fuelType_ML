@@ -1,5 +1,5 @@
 ft.short.ra <- readRDS('cache/out.access.short.rds')
-
+plot(ft.short.ra)
 # 
 tmp.ft.df <- readRDS('cache/ft.train.evaluation.rds')
 ft.df <- tmp.ft.df[,c('ft.new','ft.new.num')]
@@ -19,7 +19,6 @@ l.s.c.df <- merge(long.short.convert.df,ft.df,by.x = 'new_nm',by.y= 'ft.new')
 ft.full.ra <- readRDS('cache/out.access.long.rds')
 
 # prob.tmp.ra <- ft.full.ra[["prob"]]
-# 
 
 get.max.nm.func <- function(nm.in){
   
@@ -69,25 +68,39 @@ out.df$layer <- as.numeric(out.df$layer)
 coordinates(out.df) <- ~ x + y
 gridded(out.df) <- TRUE
 out.ra <- raster(out.df)
+writeRaster(out.ra,'cache/ft_90m_filtered.tif',options=c('TFW=YES'))
 saveRDS(out.ra,'cache/ft.fine.access2100.rcp85.rds')
+
+out.ra <- readRDS('cache/ft.fine.access2100.rcp85.rds')
+
 value.vec <- unique(out.ra)
-value.vec.full <- c(value.vec-0.1,value.vec+0.1)
+
+value.vec.full <- c(3000,value.vec+0.1)
 value.vec.full <- value.vec.full[order(value.vec.full)]
 # 
-col.in.df <- data.frame(col.1 = c('deeppink','coral','cyan','darkgoldenrod','green','darkorchid'),
-                        col.2 = c('deeppink4','coral4','cyan4','darkgoldenrod4','darkgreen','darkorchid4'))
+col.in.df <- data.frame(col.1 = c('deeppink','coral','cyan',
+                                  'gold','green','darkorchid'),
+                        col.2 = c('deeppink4','coral4','cyan4',
+                                  'gold4','darkgreen','darkorchid4'))
 l.s.c.df$col <- NA
-l.s.c.df <- l.s.c.df[order(l.s.c.df$ID),]
-for (i.col in 1:6 ) {
+# l.s.c.df <- l.s.c.df[order(l.s.c.df$ID),]
+for (i.col in 1:6) {
   c.f <- colorRampPalette(colors = col.in.df[i.col,])
-  l.s.c.df$col[l.s.c.df$ft.new.num==i.col] <- c.f(length(l.s.c.df$col[l.s.c.df$ft.new.num==i.col]))
+  l.s.c.df$col[l.s.c.df$ft.new.num==i.col] <- 
+    c.f(length(l.s.c.df$col[l.s.c.df$ft.new.num==i.col]))
+  
 }
-# 
-l.s.c.df <- l.s.c.df[order(l.s.c.df$ft.new.num),]
+
+plot(ID ~ ft.new.num,data = l.s.c.df,pch=16,col=col)
+
+
+# l.s.c.df <- l.s.c.df[order(l.s.c.df$ft.new.num),]
 pdf('ft.new.short.fine.filtered.pdf',width = 8,height = 6*2)
 par(mar=c(4,4,1,1))
 par(mfrow=c(2,1))
 plot(out.ra,breaks = value.vec.full,legend=F,col = l.s.c.df$col[order(l.s.c.df$ID)])
 plot(0,ann=F,axes=F,xlab='',ylab='',pch=NA)
 legend('top',legend = l.s.c.df$nm,pch=15,col=l.s.c.df$col,ncol=2)
+
+
 dev.off()
