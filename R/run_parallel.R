@@ -29,31 +29,43 @@ registerDoParallel(cl)
 s.time <- Sys.time()
 
 out.list <- foreach (i=1:cores, .packages = 'randomForest') %dopar% {
-  predict(object = model.rf,newdata=data.ls[[i]])
+  predict(object = model.rf,newdata=data.ls[[i]],type='prob')
 }
 stopImplicitCluster()
 
 e.time <- Sys.time()
 
 time.use <- e.time - s.time
-# get out put####
-out.list <- lapply(X = out.list,as.character)
+# get output####
+# out.list <- lapply(X = out.list,as.character)
 
 rm(model.rf)
 rm(cl)
 # put input output together
 # sample.d <- do.call(rbind,data.ls)
 rm(data.ls)
-sample.d$pred <- do.call(c,out.list)
-# make a raster output #####
-spg <- sample.d[,c('x','y','pred')]
-spg$pred <- as.numeric(spg$pred)
-coordinates(spg) <- ~ x + y
-gridded(spg) <- TRUE
-out.ra <- raster(spg)
+sample.d.new <- cbind(sample.d[,c('x','y')],do.call(rbind,out.list))
+
+make.raster.func <- function(x.in){
+  spg <- sample.d.new[,c(1,2,x.in)]
+  # spg$pred <- as.numeric(spg$pred)
+  coordinates(spg) <- ~ x + y
+  gridded(spg) <- TRUE
+  out.ra <- raster(spg)
+  return(out.ra)
+}
+
+out.ra.stack <- stack(sapply(X = 3:38,make.raster.func))
+
+# # make a raster output #####
+# spg <- sample.d[,c('x','y','pred')]
+# spg$pred <- as.numeric(spg$pred)
+# coordinates(spg) <- ~ x + y
+# gridded(spg) <- TRUE
+# out.ra <- raster(spg)
 # plot(out.ra)
-unique(out.ra)
-saveRDS(out.ra,'cache/out.access.long.rds')
+
+saveRDS(out.ra.stack,'cache/out.access.long.rds')
 
 # make plots#########
 tmp.ft.df <- readRDS('ft.train.evaluation.rds')
