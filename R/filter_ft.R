@@ -1,5 +1,6 @@
 ft.short.ra <- readRDS('cache/out.access.short.rds')
-plot(ft.short.ra)
+# plot(ft.short.ra)
+source('r/get_color4ft.R')
 # 
 tmp.ft.df <- readRDS('cache/ft.train.evaluation.rds')
 ft.df <- tmp.ft.df[,c('ft.new','ft.new.num')]
@@ -78,18 +79,7 @@ value.vec <- unique(out.ra)
 value.vec.full <- c(3000,value.vec+0.1)
 value.vec.full <- value.vec.full[order(value.vec.full)]
 # 
-col.in.df <- data.frame(col.1 = c('deeppink','coral','cyan',
-                                  'gold','green','darkorchid'),
-                        col.2 = c('deeppink4','coral4','cyan4',
-                                  'gold4','darkgreen','darkorchid4'))
-l.s.c.df$col <- NA
-# l.s.c.df <- l.s.c.df[order(l.s.c.df$ID),]
-for (i.col in 1:6) {
-  c.f <- colorRampPalette(colors = col.in.df[i.col,])
-  l.s.c.df$col[l.s.c.df$ft.new.num==i.col] <- 
-    c.f(length(l.s.c.df$col[l.s.c.df$ft.new.num==i.col]))
-  
-}
+
 
 plot(ID ~ ft.new.num,data = l.s.c.df,pch=16,col=col)
 
