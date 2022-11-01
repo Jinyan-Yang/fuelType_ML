@@ -27,9 +27,8 @@ source('r/ft_shortlist.R')
 # the reason is CFA has not provided with a final short list
 
 # predict for all fuel types
-source('r/run_parallel.R')
-# and for the short list
-source('r/run_parallel_shortlist.R')
+source('r/predict_future_paralle.R')
+
 
 # the plan then is to use the fuel type in the short list 
 # to filter out types that are unlikely to present 
