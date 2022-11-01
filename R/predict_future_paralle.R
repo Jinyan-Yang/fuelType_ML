@@ -99,6 +99,7 @@ fit.paral.func(data.path = 'cache/input_access_rcp85_20852100.rds',
                out.nm = 'cache/out.access.rcp85.20852100.short.rds',
                doProb=FALSE,isLongList=FALSE)
 
+
 fit.paral.func(data.path = 'cache/input_access_rcp85_20852100.rds',
                model.path = 'cache/rf.fit.fuelType.new.rds',
                out.nm = 'cache/out.access.rcp85.20852100.long.rds',
